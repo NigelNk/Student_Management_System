@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Login
+{% endblock title %}
+
+
+{% block extra_style %}
+<style>
+    body {
+      background-image: url("{% static 'images/backgrounds/background2.png' %}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100%;
+    }
+</style>
+{% endblock extra_style %}
+
+{% block content %}
+<style>
+    .transparent-card {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+</style>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card p-4 shadow-lg rounded-4 transparent-card" style="width: 100%; max-width: 420px;">
+        <div class="text-center mb-4">
+            <img alt="EduFlow Logo" src="{% static 'images/backgrounds/logo.png' %}" style="width: 110px; border-radius: 50%; filter: invert(100%) brightness(200%);">
+            </img>
+        </div>
+        {% if form.errors %}
+        <small class="text-danger">
+            Please enter a correct username and password. Note that both fields may be case-sensitive
+        </small>
+        {% endif %}
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="username">
+                    Username
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="username" name="username" placeholder="Enter your username" required="" type="text">
+                    </input>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">
+                    Password
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="password" name="password" placeholder="Enter your password" required="" type="password">
+                    </input>
+                </div>
+            </div>
+            <div class="d-grid mb-3">
+                <button class="btn btn-primary" type="submit">
+                    Login
+                </button>
+            </div>
+            <div class="text-center">
+                <small>
+                    <a href="{% url 'password_reset' %}">
+                        Forgot password?
+                    </a>
+                </small>
+            </div>
+            <div class="login-or position-relative text-center">
+                or
+            </div>
+            <div class="text-center">
+                <small>
+                    Don't have an account?
+                    <a href="{% url 'signup' %}">
+                        Sign up here
+                    </a>
+                </small>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

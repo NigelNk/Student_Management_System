@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Subjects
+{% endblock title %}
+
+{% block content %}
+
+{% include 'profiles/partials/_navbar_sidebar.html'%}
+<!-- Content -->
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4 mb-4">
+                Subjects
+            </h1>
+
+            {% if user.student %}
+            <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-table me-1">
+                            </i>
+                            Subjects Assigned For
+                            <strong>
+                                {{user.first_name}} {{user.last_name}}
+                            </strong>
+                        </h6>
+                        <a class="btn btn-outline-success text-white" data-bs-placement="left" data-bs-toggle="tooltip" href="{% url 'refresh_subjects'%}" title="Refresh">
+                            <i class="bi bi-arrow-clockwise">
+                            </i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">Subject Name</th>
+                                        <th scope="col">Subject Code</th>
+                                        <th scope="col">Assigned Teacher</th>
+                                        <th scope="col">Subject Bio</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for subject in user.student.subject.all %}
+                                    <tr>
+                                        <td>
+                                            {{subject.subject_name}}
+                                        </td>
+                                        <td>
+                                            {{subject.subject_code}}
+                                        </td>
+                                        <td>
+                                            {% for teacher in subject.teacher_set.all %}
+                                            {% if teacher.stream1 == user.student.stream or teacher.stream2 == user.student.stream or teacher.stream3 == user.student.stream %}
+                                                {{teacher.user.first_name}} {{teacher.user.last_name}}
+                                            
+                                            {% endif %}
+
+                                            {% empty %}
+                                                No teacher assigned
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" href="#">
+                                                View
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" href="#">
+                                                Remove
+                                            </a>
+                                        </td>
+                                    </tr>
+                            {% endfor %}
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Subject bio section -->
+                <div class="card mb-4 rounded-4 border-0">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-book-half me-2">
+                            </i>
+                            Biology Subject Bio
+                        </h5>
+                        <span class="badge bg-light text-dark">
+                            Applies to all classes
+                        </span>
+                    </div>
+                    <!-- subject bio -->
+                    <div class="card-body bg-light">
+                        <h6 class="fw-bold mb-3">
+                            📚 How to Pass Biology
+                        </h6>
+                        <p class="text-muted">
+                            To pass Biology, focus on understanding key concepts rather than memorizing facts. Use diagrams to visualize structures and processes. Practice past papers, form group discussions, and relate biology topics to real-life examples. Consistency and curiosity are key! 🔬🌿
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                        <h6 class="fw-bold py-3">
+                            <i class="bi bi-chat-left-dots-fill"></i>
+                            Student Comments
+                        </h6>
+                        <!-- Existing Comments -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-start mb-2">
+                                <img alt="User Avatar" class="rounded-circle me-2" src="https://i.pravatar.cc/40?img=1">
+                                    <div>
+                                        <strong>
+                                            Emily Banda
+                                        </strong>
+                                        <p class="mb-0">
+                                            Group study really helped me! We explained concepts to each other and used flashcards. 🧠
+                                        </p>
+                                        <small class="text-muted">
+                                            2 hours ago
+                                        </small>
+                                    </div>
+                                </img>
+                            </div>
+                            <div class="d-flex align-items-start mb-2">
+                                <img alt="User Avatar" class="rounded-circle me-2" src="https://i.pravatar.cc/40?img=2">
+                                    <div>
+                                        <strong>
+                                            Chisomo Jere
+                                        </strong>
+                                        <p class="mb-0">
+                                            Drawing diagrams every day made a huge difference in my grades! 🎨
+                                        </p>
+                                        <small class="text-muted">
+                                            5 hours ago
+                                        </small>
+                                    </div>
+                                </img>
+                            </div>
+                        </div>
+                        <!-- Comment Form -->
+                        <form>
+                            <div class="d-flex">
+                                <img alt="Your Avatar" class="rounded-circle me-2" src="https://i.pravatar.cc/40?img=5">
+                                    <input class="form-control rounded-pill" placeholder="Write a comment..." type="text">
+                                        <button class="btn btn-primary ms-2 rounded-pill" type="submit">
+                                            Post
+                                        </button>
+                                    </input>
+                                </img>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+
+                <p style="margin-left: 5px;">
+                    No subjects.
+                    <a class="link-primary text-decoration-none" href="{% url 'profile_create' %}">
+                        Register first.
+                    </a>
+                </p>
+
+                {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock content %}

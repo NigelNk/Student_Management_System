@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Welcome to EduFlow
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if user.role == 'student' %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% include 'pages/partials/_student_temp.html' %}
+        {% elif user.role == 'teacher' %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% include 'profiles/teachers/teacher_template.html' %}
+        {% endif %}
+    {% else %}
+
+    {% include 'registration/login.html' %}
+       
+    {% endif %}
+{% endblock content %}

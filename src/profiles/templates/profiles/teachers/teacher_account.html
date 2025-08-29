@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+{% include 'profiles/partials/_navbar_sidebar_teachers.html'%}
+<!-- Main Content -->
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4 mx-3">
+        <div class="d-flex">
+            <h2 class="fw-bold">
+                My Account
+            </h2>
+        </div>
+        <div class="dropdown">
+            <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" id="settingsDropdown" type="button">
+                <i class="bi bi-gear-fill me-1">
+                </i>
+                Settings
+            </button>
+            <ul aria-labelledby="settingsDropdown" class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="{% url 'profile_update' %}">
+                        <i class="bi bi-pencil-square me-2">
+                        </i>
+                        Edit Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'password_change' %}">
+                        <i class="bi bi-shield-lock-fill me-2">
+                        </i>
+                        Change Password
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container py-3">
+        <div class="row">
+            <!-- Left: Profile Sidebar -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow rounded-4">
+                    <div class="card-body text-center">
+                        {% if user.teacher.profile_picture %}
+                        <img alt="profile_picture" class="rounded-circle p-1 bg-primary" src="{{ user.teacher.profile_picture.url }}" width="110">
+                            {% else %}
+                            <img alt="profile_picture" class="rounded-circle p-1 bg-primary" src="https://bootdey.com/img/Content/avatar/avatar6.png" width="110">
+                                {% endif %}
+                                <h4>
+                                    {{ teacher.user.get_full_name }}
+                                </h4>
+                                <p class="text-muted mb-1">
+                                    {{ teacher.office }}
+                                </p>
+                                <p class="text-muted">
+                                    {{ teacher.phone }}
+                                </p>
+                                <span class="badge bg-primary" style="height: 30px; padding-top: 10px;">
+                                    Teacher Code: {{ teacher.teachers_code }}
+                                </span>
+                            </img>
+                        </img>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Main Content -->
+            <div class="col-md-8">
+                <!-- Basic Info -->
+                <div class="card shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-dark text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-badge-fill me-2">
+                            </i>
+                            Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>
+                                Gender:
+                            </strong>
+                            {{ teacher.gender }}
+                        </p>
+                        <p>
+                            <strong>
+                                Marital Status:
+                            </strong>
+                            {{ teacher.marital_status }}
+                        </p>
+                        <p>
+                            <strong>
+                                Joined:
+                            </strong>
+                            {{ teacher.joined_at }}
+                        </p>
+                        <p>
+                            <strong>
+                                Experience:
+                            </strong>
+                            {{ teacher.experience }} years
+                        </p>
+                    </div>
+                </div>
+                <!-- Teaching Assignment -->
+                <div class="card shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-dark text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-journal-bookmark-fill me-2">
+                            </i>
+                            Teaching Assignment
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>
+                                Form Teacher:
+                            </strong>
+                            {{ teacher.form_teacher }} - {{ teacher.ft_stream }}
+                        </p>
+                        <p>
+                            <strong>
+                                Other Assignments:
+                            </strong>
+                        </p>
+                        <ul>
+                            {% if teacher.form_assigned %}
+                            <li>
+                                {{ teacher.form_assigned }} - {{ teacher.stream1 }}
+                            </li>
+                            {% endif %}
+                            {% if teacher.form_assigned2 %}
+                            <li>
+                                {{ teacher.form_assigned2 }} - {{ teacher.stream2 }}
+                            </li>
+                            {% endif %}
+                            {% if teacher.form_assigned3 %}
+                            <li>
+                                {{ teacher.form_assigned3 }} - {{ teacher.stream3 }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- Subjects -->
+                <div class="card shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-dark text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-book-fill me-2">
+                            </i>
+                            Subjects Taught
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if teacher.subject.all %}
+                        <ul class="list-group">
+                            {% for subj in teacher.subject.all %}
+                            <li class="list-group-item">
+                                {{ subj.subject_name }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>
+                            No subjects assigned yet.
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Bio -->
+                <div class="card shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-dark text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle-fill me-2">
+                            </i>
+                            About Me
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            {{ teacher.bio|default:"No bio provided yet." }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

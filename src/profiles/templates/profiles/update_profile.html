@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Update Profile
+{% endblock title %}
+
+{% block content %}
+    {% if user.role == 'teacher' %}
+<div class="container my-5">
+    <div class="p-4 rounded-4 shadow-lg border bg-light">
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{form.errors}}
+        </div>
+        {% endif %}
+        <h3 class="text-center mb-4">
+            📋 EDIT Profile
+        </h3>
+        <form enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <!-- Personal Information -->
+            <h5 class="mb-3">
+                👤 Personal Information ( {{user.username}} )
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="gender">
+                        Gender | Current:
+                        <span class="text-muted">
+                            {{user.teacher.gender}}
+                        </span>
+                    </label>
+                    <select class="form-select" id="gender" name="gender" required="">
+                        <option selected="" value="{{user.teacher.gender}}">
+                            {{user.teacher.gender}}
+                        </option>
+                        <option value="">
+                            -- Select gender --
+                        </option>
+                        <option value="male">
+                            Male
+                        </option>
+                        <option value="female">
+                            Female
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="marital_status">
+                        Marital Status | Current:
+                        <span class="text-muted">
+                            {{user.teacher.marital_status}}
+                        </span>
+                    </label>
+                    <select class="form-select" id="marital_status" name="marital_status">
+                        <option selected="" value="{{user.teacher.marital_status}}">
+                            {{user.teacher.marital_status}}
+                        </option>
+                        <option disabled="" value="">
+                            -- Select Status --
+                        </option>
+                        <option value="Single">
+                            Single
+                        </option>
+                        <option value="Married">
+                            Married
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="phone">
+                        Phone | Current:
+                        <span class="text-muted">
+                            {{user.teacher.phone}}
+                        </span>
+                    </label>
+                    <input class="form-control" id="phone" maxlength="12" name="phone" required="" type="text" value="{{user.teacher.phone}}">
+                    </input>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="joined_at">
+                        Joined On | Current:
+                        <span class="text-muted">
+                            {{user.teacher.joined_at}}
+                        </span>
+                    </label>
+                    <input class="form-control" id="joined_at" name="joined_at" type="date">
+                    </input>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="experience">
+                        Years of Experience | Current:
+                        <span class="text-muted">
+                            {{user.teacher.experience}} years
+                        </span>
+                    </label>
+                    <input class="form-control" id="experience" min="0" name="experience" type="number" value="{{user.teacher.experience}}">
+                    </input>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="office">
+                        Office | Current:
+                        <span class="text-muted">
+                            {{user.teacher.office}}
+                        </span>
+                    </label>
+                    <input class="form-control" id="office" name="office" type="text" value="{{user.teacher.office}}">
+                    </input>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label" for="profile_picture">
+                        Profile Picture | Current:
+                        <span class="text-muted">
+                            {{user.teacher.profile_picture.url}}
+                        </span>
+                    </label>
+                    <input class="form-control" id="profile_picture" name="profile_picture" type="file" value="{{user.teacher.profile_picture.url}}">
+                    </input>
+                </div>
+            </div>
+            <!-- Secret Code & Bio -->
+            <hr class="my-4">
+                <h5>
+                    🔐 Security & Bio
+                </h5>
+                <div class="mb-3">
+                    <label class="form-label" for="teachers_code">
+                        Teacher's Secret Code
+                    </label>
+                    <input class="form-control" id="teachers_code" maxlength="8" name="teachers_code" required="" type="text" value="{{user.teacher.teachers_code}}">
+                    </input>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="bio">
+                        Bio
+                    </label>
+                    <textarea class="form-control" id="bio" name="bio" placeholder="Write something about yourself..." rows="3">{{user.teacher.bio}}</textarea>
+                </div>
+                <!-- Academic Info -->
+                <hr class="my-4">
+                    <h5>
+                        🏫 Teaching Responsibilities
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="form_teacher">
+                                Form Teacher
+                            </label>
+                            <select class="form-select" id="form_teacher" name="form_teacher">
+                                <option value="{{user.teacher.form_teacher}}">
+                                    {{user.teacher.form_teacher}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="Form 1">
+                                    Form One
+                                </option>
+                                <option value="Form 2">
+                                    Form Two
+                                </option>
+                                <option value="Form 3">
+                                    Form Three
+                                </option>
+                                <option value="Form 4">
+                                    Form Four
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="ft_stream">
+                                Form Teachers Stream
+                            </label>
+                            <select class="form-select" id="ft_stream" name="ft_stream">
+                                <option value="{{user.teacher.ft_stream}}">
+                                    {{user.teacher.ft_stream}}
+                                </option>
+                                 <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="A">
+                                    A
+                                </option>
+                                <option value="B">
+                                    B
+                                </option>
+                            </select>
+                        </div>
+                        <!-- First Set -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="form_assigned">
+                                Form Assigned
+                            </label>
+                            <select class="form-select" id="form_assigned" name="form_assigned">
+                                <option value="{{user.teacher.form_assigned}}">
+                                    {{user.teacher.form_assigned}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="Form 1">
+                                    Form One
+                                </option>
+                                <option value="Form 2">
+                                    Form Two
+                                </option>
+                                <option value="Form 3">
+                                    Form Three
+                                </option>
+                                <option value="Form 4">
+                                    Form Four
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="stream1">
+                                Stream 1
+                            </label>
+                            <select class="form-select" id="stream1" name="stream1">
+                                <option value="{{user.teacher.stream1}}">
+                                    {{user.teacher.stream1}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="A">
+                                    A
+                                </option>
+                                <option value="B">
+                                    B
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Second Set -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="form_assigned2">
+                                Form Assigned 2
+                            </label>
+                            <select class="form-select" id="form_assigned2" name="form_assigned2">
+                                <option value="{{user.teacher.form_assigned2}}">
+                                    {{user.teacher.form_assigned2}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="Form 1">
+                                    Form One
+                                </option>
+                                <option value="Form 2">
+                                    Form Two
+                                </option>
+                                <option value="Form 3">
+                                    Form Three
+                                </option>
+                                <option value="Form 4">
+                                    Form Four
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="stream2">
+                                Stream 2
+                            </label>
+                            <select class="form-select" id="stream2" name="stream2">
+                                <option value="{{user.teacher.stream2}}">
+                                    {{user.teacher.stream2}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="A">
+                                    A
+                                </option>
+                                <option value="B">
+                                    B
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Third Set -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="form_assigned3">
+                                Form Assigned 3
+                            </label>
+                            <select class="form-select" id="form_assigned3" name="form_assigned3">
+                                <option selected="" value="{{user.teacher.form_assigned3}}">
+                                   {{user.teacher.form_assigned3}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="Form 1">
+                                    Form One
+                                </option>
+                                <option value="Form 2">
+                                    Form Two
+                                </option>
+                                <option value="Form 3">
+                                    Form Three
+                                </option>
+                                <option value="Form 4">
+                                    Form Four
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="stream3">
+                                Stream 3
+                            </label>
+                            <select class="form-select" id="stream3" name="stream3">
+                                <option selected="" value="{{user.teacher.stream3}}">
+                                    {{user.teacher.stream3}}
+                                </option>
+                                <option value="">
+                                    -- Select Stream --
+                                </option>
+                                <option value="A">
+                                    A
+                                </option>
+                                <option value="B">
+                                    B
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Subjects -->
+                    <div class="mb-4 mt-4">
+                        <label class="form-label" for="subject">
+                            Subjects
+                        </label>
+                        <select class="form-select" id="subject" multiple="" name="subject" style="width: 100%; height: 150px;">
+                            {% for subject in form.subject %}
+                            <option value="math">
+                                {{subject}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            Hold Ctrl (or ⌘ Command on Mac) to select multiple subjects
+                        </div>
+                    </div>
+                    <!-- Submit -->
+                    <div class="text-center">
+                        <button class="btn btn-primary px-5 py-2" type="submit">
+                            ✅ Update
+                        </button>
+                    </div>
+                    <a class="link-primary text-decoration-none" href="{% url 'home' %}">
+                        <i class="bi bi-arrow-return-right">
+                        </i>
+                        Return to Dashboard
+                    </a>
+                </hr>
+            </hr>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

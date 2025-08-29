@@ -1,0 +1,177 @@
+{% include 'profiles/partials/_navbar_sidebar_teachers.html'%}
+<!-- Main Content -->
+<div class="content">
+    {% if user.teacher %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            Dashboard
+        </h2>
+        <button class="btn btn-outline-light">
+            <i class="bi bi-calendar3 me-1">
+            </i>
+            Term 2
+        </button>
+    </div>
+    <!-- Dashboard Stats -->
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card bg-primary shadow-sm text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        📚 Classes
+                    </h5>
+                    <h3>
+                        {{ user.teacher.number_of_classes }}
+                    </h3>
+                    <p class="mb-0">
+                        Total Assigned
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success shadow-sm text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-mortarboard"></i>
+                        Students
+                    </h5>
+                    <h3>
+                        {{ user.teacher.number_of_students }}
+                    </h3>
+                    <p class="mb-0">
+                        Under Your Classes
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning shadow-sm text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-chat-left-dots"></i>
+                        Messages
+                    </h5>
+                    <h3>
+                        8
+                    </h3>
+                    <p class="mb-0">
+                        Unread
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger shadow-sm text-white">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        ⏳ Pending Tasks
+                    </h5>
+                    <h3>
+                        3
+                    </h3>
+                    <p class="mb-0">
+                        Submissions to Grade
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Table Section -->
+    <div class="card bg-secondary mt-5 shadow-sm text-white">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                📋 Your Current Classes
+            </h5>
+            <button class="btn btn-outline-light btn-sm">
+                <i class="bi bi-plus-circle me-1">
+                </i>
+                Add Class
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="table-light text-dark">
+                    <tr>
+                        <th>
+                            Class Name
+                        </th>
+                        <th>
+                            Subjects
+                        </th>
+                        <th>
+                            Students
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form, stream in user.teacher.my_assigned_forms %}
+                    {% if form != "None" and stream != "None" and form and stream %}
+                    <tr>
+                        <td>
+                            {{ form }}{{ stream }}
+                        </td>
+                        <td>
+                            {% for subject in user.teacher.subject.all %}
+                            {% if subject.subject_full_form_name == form %}
+
+                            {{subject.subject_name}},
+
+                            {% endif %}
+                            {% empty %}
+                            None
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for c in user.teacher.student_class_counts %}
+                            {% if c.form == form and c.stream == stream %}
+
+                                {{c.count}}
+
+                            {% endif %}
+                            {% empty %}
+                            0
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-light btn-sm">
+                                View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm">
+                                Grade
+                            </button>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr>
+                        <td class="text-center" colspan="4">
+                            No assigned classes.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="container mt-4 justify-content-center">
+        <h1 class="mb-4 text-center">
+            Welcome to EduFlow teachers Dashboard
+        </h1>
+        <h4>
+            Kindly register as a teacher before continuing. Thank you!
+        </h4>
+        <a class="icon-link icon-link-hover link-warning text-decoration-none" style="font-size: 25px" href="{% url 'profile_create' %}">
+            Click to register
+            <svg aria-hidden="true" class="bi" viewbox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z">
+                </path>
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+</div>

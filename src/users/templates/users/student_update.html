@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Edit
+{% endblock title %}
+
+{% block content %}
+{% include 'profiles/partials/_navbar_sidebar.html'%}
+<!-- Content -->
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-5">
+            <h1 class="mt-4 mb-4">
+                Edit Profile
+            </h1>
+
+			<div class="container mt-5">
+			    <div class="row justify-content-center">
+			    	{% if messages %}
+					<ul>
+					   {% for message in messages %}
+					   	<div class="alert alert-success text-center" role="alert">
+					  		{{message}}
+						</div>
+					   {% endfor %}
+					</ul>
+					{% endif %}
+			        <div class="col-md-6">
+			        	<small class="text-muted"><strong class="text-primary">Note: </strong>Only your email and username can be edited. For any additional changes, kindly contact the administrator.</small>
+			            <div class="card shadow-sm">
+			                <div class="card-header bg-primary text-white text-center">
+			                    <h4 class="mb-0">Edit</h4>
+			                </div>
+			                <div class="card-body">
+			                    <form method="POST" novalidate>
+			                        {% csrf_token %}
+
+			                        <div class="mb-3">
+			                            <label for="id_email" class="form-label">Email address</label>
+			                            <input type="email" name="email" class="form-control" id="id_email" placeholder="Enter your email" value="{{user.email}}" required>
+			                        </div>
+
+			                        <div class="mb-3">
+			                            <label for="id_username" class="form-label">Username</label>
+			                            <input type="text" name="username" class="form-control" id="id_username" placeholder="Choose a username" value="{{user.username}}" required>
+			                        </div>
+
+			                        <div class="d-grid">
+			                            <button type="submit" class="btn btn-primary">Save</button>
+			                        </div>
+			                    </form>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</main>
+</div>
+{% endblock %}

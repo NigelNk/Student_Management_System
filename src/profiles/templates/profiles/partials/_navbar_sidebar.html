@@ -1,0 +1,164 @@
+<style>
+    .card {
+  box-shadow: 0 2px 6px 0 rgba(218, 218, 253, 0.65), 0 2px 6px 0 rgba(206, 206, 238, 0.54);
+  border: none;
+  border-radius: .25rem;
+  margin-bottom: 1.5rem;
+}
+</style>
+
+<!-- Top Navbar -->
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand ps-3" href="{% url 'home' %}">
+        EduFlow
+    </a>
+    <!-- Sidebar Toggle -->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle">
+        <i class="fas fa-bars">
+        </i>
+    </button>
+    <!-- Navbar Right -->
+    <ul class="navbar-nav ms-auto me-4">
+        <li class="nav-item me-3">
+            <a class="nav-link d-flex align-items-center position-relative" href="#">
+                <i class="bi bi-chat-left-text me-2">
+                </i>
+                Messages
+                <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger">
+                    0
+                    <span class="visually-hidden">
+                        unread messages
+                    </span>
+                </span>
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button">
+                <i class="fas fa-user fa-fw">
+                </i>
+                {{user.username}}
+            </a>
+            <ul aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" href="{% url 'update' user.pk %}">
+                        <i class="bi bi-pencil-square me-2">
+                        </i>
+                        Edit Profile
+                    </a>
+                </li>
+                 <li>
+                    <a class="dropdown-item" href="{% url 'password_change'%}">
+                        <i class="bi bi-shield-lock-fill me-2">
+                        </i>
+                        Change password
+                    </a>
+                </li>
+                <li>
+                    {% if user.student %}
+                    <a class="dropdown-item" href="{% url 'student_account_manager' user.student.pk %}">
+                        <i class="bi bi-person me-2">
+                        </i>
+                        Account
+                    </a>
+                    {% endif %}
+                </li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li>
+                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="bi bi-box-arrow-right me-2">
+                        </i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<!-- Sidebar and Content -->
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <!-- Sidebar -->
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav mb-5">
+                    <div class="sb-sidenav-menu-heading">
+                        Core
+                    </div>
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-tachometer-alt">
+                            </i>
+                        </div>
+                        Dashboard
+                    </a>
+
+                    {% if user.student %}
+                    <div class="sb-sidenav-menu-heading">
+                        Interface
+                    </div>
+                    <!-- Layouts -->
+                    <a class="nav-link" href="{% url 'form_teacher' %}">
+                        <i class="bi bi-person me-2">
+                        </i>
+                        <span>
+                            Teachers
+                        </span>
+                    </a>
+                    <a class="nav-link" href="{% url 'subjects' %}">
+                        <i class="bi bi-book me-2">
+                        </i>
+                        <span>
+                            Subjects
+                        </span>
+                    </a>
+                    <a class="nav-link" href="{% url 'see_grades' %}">
+                        <i class="bi bi-bar-chart me-2">
+                        </i>
+                        <span>
+                            See Grades
+                        </span>
+                    </a>
+                    <div class="sb-sidenav-menu-heading">
+                        Others
+                    </div>
+                    <a class="nav-link" href="charts.html">
+                        <div class="sb-nav-link-icon">
+                            <i class="bi bi-people me-1">
+                            </i>
+                        </div>
+                        Groups
+                    </a>
+                    <a class="nav-link" href="tables.html">
+                        <div class="sb-nav-link-icon">
+                            <i class="bi bi-question-circle me-1">
+                            </i>
+                        </div>
+                        Queries
+                    </a>
+
+                    {% else %}
+
+                    <div class="sb-sidenav-menu-heading text-center text-warning">
+                        Nothing yet.
+                    </div>
+
+                    {% endif %}
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 text-center text-md-center">
+                        <a class="text-white text-decoration-none" href="#">
+                            🎓 Student Management System
+                        </a>
+                        <br>
+                            <small>
+                                v1.0
+                            </small>
+                        </br>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>

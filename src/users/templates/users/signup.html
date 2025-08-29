@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up{% endblock title %}
+
+{% block extra_style %}
+<style>
+    body {
+      background-image: url("{% static 'images/backgrounds/background2.png' %}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100%;
+    }
+</style>
+{% endblock extra_style %}
+
+{% block content %}
+<style>
+    .transparent-card {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+</style>
+<div class="container d-flex justify-content-center align-items-center py-5" style="min-height: 90vh;">
+    <div class="card p-4 rounded-4 transparent-card" style="width: 100%; max-width: 500px;">
+        <h4 class="text-center mb-4">
+            <i class="bi bi-person-plus-fill me-2">
+            </i>
+            Create Account
+        </h4>
+        <form action="{% url 'signup' %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="email">
+                    Email
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-envelope-fill">
+                        </i>
+                    </span>
+                    <input class="form-control " id="email" name="email" placeholder="Enter your email" required="" type="email">
+                    </input>
+                </div>
+                {% if form.email.errors %}
+                <small class="text-danger">
+                    {{ form.email.errors.0 }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="username">
+                    Username
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-circle">
+                        </i>
+                    </span>
+                    <input class="form-control" id="username" name="username" placeholder="Choose a username" required="" type="text">
+                    </input>
+                </div>
+                 {% if form.username.errors %}
+                <small class="text-danger">
+                    {{ form.username.errors.0 }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="firstname">
+                    Firstname
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="firstname" name="first_name" placeholder="Enter firstname" required="" type="text">
+                    </input>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="lastname">
+                    Lastname
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="lastname" name="last_name" placeholder="Enter lastname" required="" type="text">
+                    </input>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="role">
+                    Select Role
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person-badge-fill">
+                        </i>
+                    </span>
+                    <select class="form-select" id="role" name="role" required="">
+                        <option disabled="" selected="" value="">
+                            -- Select Role --
+                        </option>
+                        <option value="student">
+                            🎓 Student
+                        </option>
+                        <option value="teacher">
+                            🧑‍🏫 Teacher
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password1">
+                    Password
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="password1" name="password1" placeholder="Enter password" required="" type="password">
+                    </input>
+                </div>
+                  {% if form.password1.errors %}
+                <small class="text-danger">
+                    {{ form.password1.errors.0 }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password2">
+                    Confirm Password
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock-fill">
+                        </i>
+                    </span>
+                    <input class="form-control" id="password2" name="password2" placeholder="Confirm password" required="" type="password">
+                    </input>
+                </div>
+                 {% if form.password2.errors %}
+                <small class="text-danger">
+                    {{ form.password2.errors.0 }}
+                </small>
+                {% endif %}
+            </div>
+            <div class="d-grid mb-2">
+                <button class="btn btn-success" type="submit">
+                    Create Account
+                </button>
+            </div>
+            <div class="text-center">
+                <small>
+                    Already have an account?
+                    <a href="{% url 'login' %}">
+                        Login here
+                    </a>
+                </small>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

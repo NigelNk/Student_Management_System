@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Form Teacher
+{% endblock title %}
+
+{% block content %}
+
+
+ {% include 'profiles/partials/_navbar_sidebar.html'%}
+<!-- Content -->
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4 mb-4">
+                Teachers Profile
+            </h1>
+        </div>
+        <!-- Teacher Profile Template -->
+        {% for teacher in teachers %}
+        <div class="container py-2">
+            <div class="card rounded-4 text-white bg-dark">
+                <div class="card-header bg-primary d-flex justify-content-between align-items-center rounded-top-4">
+                    <h3 class="mb-0">
+                        {% if teacher.form_teacher and teacher.ft_stream == user.student.stream %}
+                        Your Form Teacher
+                        {% else %}
+                        Teacher
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Profile Section -->
+                        <div class="col-md-4 text-center">
+                            {% if teacher.profile_picture %}
+                            <img alt="profile_picture" class="rounded-circle p-1 bg-primary" src="{{ teacher.profile_picture.url }}" width="110">
+                                {% else %}
+                                <img alt="profile_picture" class="rounded-circle p-1 bg-primary" src="https://bootdey.com/img/Content/avatar/avatar6.png" width="110">
+                                    {% endif %}
+                                    <h4 class="fw-bold">
+                                        {{teacher.status}} {{teacher.full_name}}
+                                    </h4>
+                                </img>
+                            </img>
+                        </div>
+                        <!-- Info Tabs -->
+                        <div class="col-md-8">
+                            <ul class="nav nav-tabs mb-3" id="teacherTab-{{ teacher.id }}" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-target="#overview-{{ teacher.id }}" data-bs-toggle="tab" id="overview-tab-{{ teacher.id }}" role="tab" type="button">
+                                        Overview
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-target="#classes-{{ teacher.id }}" data-bs-toggle="tab" id="classes-tab-{{ teacher.id }}" role="tab" type="button">
+                                        Classes
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-target="#contact-{{ teacher.id }}" data-bs-toggle="tab" id="contact-tab-{{ teacher.id }}" role="tab" type="button">
+                                        Contact
+                                    </button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="teacherTabContent-{{ teacher.id }}">
+                                <!-- Overview Tab -->
+                                <div class="tab-pane fade show active" id="overview-{{ teacher.id }}" role="tabpanel">
+                                    <p>
+                                        <strong>
+                                            Joined:
+                                        </strong>
+                                        {{teacher.joined_at}}
+                                    </p>
+                                    <p>
+                                        <strong>
+                                            Experience:
+                                        </strong>
+                                        {{teacher.experience}} years
+                                    </p>
+                                    <p>
+                                        <strong>
+                                            Bio:
+                                        </strong>
+                                        {{teacher.bio}}
+                                    </p>
+                                </div>
+                                <!-- Classes Tab -->
+                                <div class="tab-pane fade" id="classes-{{ teacher.id }}" role="tabpanel">
+                                    <ul class="list-group list-group-flush text-white">
+                                        {% for form, stream in teacher.my_assigned_forms %}
+                                        {% if form != "None" and stream != "None" and form and stream %}
+
+                                         {% for subject in teacher.subject.all %}
+                                         {% if subject.subject_full_form_name == form %}
+                                        <li class="list-group-item text-white bg-dark">
+                                            {{ form }}{{ stream }} - {{subject.subject_name}}
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                       {% endif %}
+                                       {% endfor %}
+                                    </ul>
+                                </div>
+                                <!-- Contact Tab -->
+                                <div class="tab-pane fade" id="contact-{{ teacher.id }}" role="tabpanel">
+                                    <p>
+                                        <i class="bi bi-envelope me-2">
+                                        </i>
+                                        <strong>
+                                            Email:
+                                        </strong>
+                                        {{teacher.user.email}}
+                                    </p>
+                                    <p>
+                                        <i class="bi bi-telephone me-2">
+                                        </i>
+                                        <strong>
+                                            Phone:
+                                        </strong>
+                                        {{teacher.phone}}
+                                    </p>
+                                    <p>
+                                        <i class="bi bi-geo-alt me-2">
+                                        </i>
+                                        <strong>
+                                            Office:
+                                        </strong>
+                                        {{teacher.office}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+</div>
+{% endblock content %}

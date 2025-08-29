@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Records
+{% endblock title %}
+
+{% block content %}
+<style>
+    .table th, .table td {
+    vertical-align: middle;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #2c2f3f;
+    cursor: pointer;
+  }
+
+  .card-header h4 {
+    font-weight: 600;
+  }
+</style>
+{% include 'profiles/partials/_navbar_sidebar_teachers.html'%}
+
+{% if user.teacher %}
+<!-- Main Content -->
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">
+            Student Records
+        </h2>
+        <div class="d-flex align-items-center flex-grow-1 justify-content-center">
+            <input class="form-control w-50" id="searchInput" placeholder="Search by student name or ID" type="text">
+            </input>
+        </div>
+        <div>
+            <select class="form-select" id="classFilter">
+                <option value="all">
+                    All Classes
+                </option>
+                {% for form, stream in user.teacher.my_assigned_forms %}
+                {% if form != "None" and stream != "None" and form and stream %}
+                    <option value="{{form}}">
+                        {{form}}{{stream}}
+                    </option>
+                {% endif %}
+                {% endfor %}
+               
+            </select>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="card bg-dark text-white shadow-lg rounded-4">
+            {% for form, stream in user.teacher.my_assigned_forms %}
+                {% if form != "None" and stream != "None" and form and stream %}
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-people-fill me-2">
+                    </i>
+                    {{form}}{{stream}}
+                </h4>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-dark table-hover table-bordered mb-0">
+                    <thead class="table-primary text-dark">
+                        <tr data-class="{{form}}{{stream}}" data-student-id="{{ student.student_id }}" data-student-name="{{ student.full_name|lower }}">
+                            <th scope="col">
+                                Student ID
+                            </th>
+                            <th scope="col">
+                                Full Name
+                            </th>
+                            <th scope="col">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in user.teacher.current_students %}
+                        {% if student.form == form and student.stream == stream %}
+                        <tr data-class="{{form}}{{stream}}" data-student-id="{{ student.student_id }}" data-student-name="{{ student.full_name|lower }}">
+                            <td>
+                                {{ student.student_id }}
+                            </td>
+                            <td>
+                                {{ student.full_name }}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-info me-2" href="{% url 'see_student_details' student.student_id %}">
+                                    <i class="bi bi-eye-fill">
+                                    </i>
+                                    View
+                                </a>
+                                <a class="btn btn-sm btn-outline-success" href="{% url 'enter_grades' student.student_id %}">
+                                    <i class="bi bi-award-fill">
+                                    </i>
+                                    Grade
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+                {%endif%}
+                {%endfor%}
+            </br>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            Student Records
+        </h2>
+    </div>
+    <div class="container mt-5">
+        <strong>
+            Please register as a teacher first!
+        </strong>
+        <a class="link-primary" href="#">
+            Register here
+        </a>
+    </div>
+</div>
+{% endif %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const classFilter = document.getElementById("classFilter");
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedClass = classFilter.value;
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const name = row.dataset.studentName || '';
+            const id = row.dataset.studentId || '';
+            const className = row.dataset.class || '';
+
+            const matchesSearch = name.includes(searchTerm) || id.includes(searchTerm);
+            const matchesClass = selectedClass === "all" || className === selectedClass;
+
+            if (matchesSearch && matchesClass) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+    classFilter.addEventListener("change", filterTable);
+});
+</script>
+{% endblock content %}

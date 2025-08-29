@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Create Groups
+{% endblock %}
+
+{% block content %}
+{% include 'profiles/partials/_navbar_sidebar_teachers.html'%}
+
+{% if user.teacher %}
+<!-- Main Content -->
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="fw-bold">
+            Group Dashboard
+        </h2>
+    </div>
+
+<div class="container py-3">
+  <!-- Top Cards -->
+  <div class="row mb-4">
+    <!-- Total Groups Created -->
+    <div class="col-md-4 mb-2">
+      <div class="card shadow-sm text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Groups Created</h5>
+          <h2>{{ total_groups }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Members per Class -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Total Students</h5>
+          <h2>{{ total_members }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clickable -->
+    <div class="col-md-4 mb-3">
+      <a href="#" class="text-decoration-none">
+        <div class="card shadow-sm bg-light border-primary hover-shadow">
+          <div class="card-body text-center">
+            <h5 class="card-title text-primary">+ Create Group</h5>
+            <p class="text-muted mb-0">Start grouping students</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Boys and Girls per Class</h5>
+      <canvas id="classGenderChart" height="80"></canvas>
+    </div>
+  </div>
+
+    <!-- Groups List -->
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Created Groups</h5>
+
+      {% if groups %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Group Name</th>
+              <th scope="col">Number of Students</th>
+              <th scope="col">Created On</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for group in groups %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ group.name }}</td>
+              <td>{{ group.members.count }}</td>
+              <td>{{ group.created_at|date:"M d, Y" }}</td>
+              <td>
+                <a href="{% url 'group_detail' group.id %}" class="btn btn-sm btn-outline-primary">View</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="text-muted">No groups created yet. Click "Create Group" above to get started.</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+</div>
+{% endif %}
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart Script -->
+<script>
+  const ctx = document.getElementById('classGenderChart').getContext('2d');
+  const classGenderChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ class_names|safe }},
+      datasets: [
+        {
+          label: 'Boys',
+          data: {{ boys_data|safe }},
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          maxBarThickness: 100  // Set your preferred max width
+        },
+        {
+          label: 'Girls',
+          data: {{ girls_data|safe }},
+          backgroundColor: 'rgba(255, 99, 132, 0.7)',
+          maxBarThickness: 100
+        }
+    ]
+
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        title: {
+          display: false
+        }
+      }
+    },
+  });
+</script>
+{% endblock %}

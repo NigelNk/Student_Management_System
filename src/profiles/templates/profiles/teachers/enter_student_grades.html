@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Manage Grades
+{% endblock title %}
+
+{% block content %}
+<style>
+  .th-c {
+    width: 150px;
+  }
+
+  .th-d {
+    width: 90px;
+  }
+
+  #update-section,#update-marks-max-section {
+    display: none;
+    transition: all 0.3s ease;
+  }
+
+
+</style>
+
+{% include 'profiles/partials/_navbar_sidebar_teachers.html' %}
+
+<!-- Main Content -->
+<div class="content">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Manage Grades</h2>
+  </div>
+
+  <div class="row">
+    <div class="container">
+      <div class="card shadow rounded-4">
+        <div class="card-body p-4">
+
+          <!-- Student Form Title -->
+          <div class="mb-4">
+            <h4 class="text-primary mb-0">{{ student.form }}</h4>
+          </div>
+          <div class="row">
+            <!-- Student Info -->
+            <div class="col-md-3 mb-3">
+              <div class="card border-0 rounded-4 h-100">
+                <div class="card-body">
+                  <h5 class="text-secondary fw-bold mb-4"><i class="bi bi-mortarboard-fill me-2"></i>Student Details</h5>
+                  <ul class="list-unstyled">
+                    <li class="mb-3">
+                      <strong>Name:</strong><br>
+                      <span class="text-muted">{{ student.full_name }}</span>
+                    </li>
+                    <li class="mb-3">
+                      <strong>Class:</strong><br>
+                      <span class="text-muted">{{ student.form }}{{ student.stream }}</span>
+                    </li>
+                    <li>
+                      <strong>ID:</strong><br>
+                      <span class="text-muted">{{ student.student_id }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grade Entry -->
+            <div class="col-md-9">
+              <!-- Subject Selection Form -->
+              <form action="{% url 'choose_subject' student.student_id %}" id="myForm" method="post">
+                {% csrf_token %}
+                <h5 class="text-success fw-bold mb-3">
+                  <i class="bi bi-view-list me-2"></i>Converted Grades
+                </h5>
+
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle shadow-sm">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Subject</th>
+                        <th>CA1</th>
+                        <th>CA2</th>
+                        <th>ET</th>
+                        <th>Overall</th>
+                        <th>Grade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <select class="form-select rounded-3" id="mySelect" name="subject">
+                            <option value="" disabled {% if not selected_subject %}selected{% endif %}>-- Choose Subject --</option>
+                            {% for subject in user.teacher.subject.all %}
+                              <option value="{{ subject.id }}" {% if selected_subject and subject.id == selected_subject.id %}selected{% endif %}>
+                                {{ subject.subject_name }}
+                              </option>
+                            {% endfor %}
+                          </select>
+                        </td>
+                        <td id="ca1">{{ grades.cont_assessment1_to_20 }}</td>
+                        <td id=ca2>{{ grades.cont_assessment2_to_20 }}</td>
+                        <td id="et">{{ grades.et_to_60 }}</td>
+                        <td>{{ grades.total_marks }}</td>
+                        <td>{{ grades.grade }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="text-muted"><strong>Note: </strong>Continuous assessment has been weighted as 20% each, and end-term marks as 60%</p>
+                </div>
+              </form>
+
+              <!-- Toggle Edit Form -->
+              <div class="form-check form-switch my-3">
+                <input class="form-check-input" type="checkbox" id="toggleEditForm">
+                <label class="form-check-label fw-semibold text-secondary" for="toggleEditForm">
+                  Edit Grades for {{ selected_subject.subject_code }}
+                </label>
+              </div>
+
+              <!-- Grade Update Form (Hidden by default) -->
+              <div id="update-section">
+                <form action="{% url 'update_students_grade' student.student_id %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="subject" value="{{ selected_subject.id }}">
+
+                  <h5 class="text-secondary fw-bold mb-3"><i class="bi bi-pencil-square me-2"></i>Edit Scores</h5>
+
+                  <table class="table table-bordered align-middle">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>CA1</th>
+                        <th>CA2</th>
+                        <th>ET</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input class="form-control" type="number" name="ca1" value="{{ grades.ca1 }}" required></td>
+                        <td><input class="form-control" type="number" name="ca2" value="{{ grades.ca2 }}" required></td>
+                        <td><input class="form-control" type="number" name="et" value="{{ grades.et }}" required></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="mb-3">
+                    <label class="form-label text-secondary fw-bold" for="remark">
+                        <i class="bi bi-pen"></i>
+                        Remark
+                    </label>
+                    <textarea class="form-control" id="remark" name="remark" placeholder="Teachers remark..." rows="3">{{grades.remark}}</textarea>
+                </div>
+
+                  <h5 class="text-secondary fw-bold mt-4"><i class="bi bi-percent me-2"></i>Max Marks (Out Of)</h5>
+                   <!-- Toggle Max marks Form -->
+                  <div class="form-check form-switch my-3">
+                    <input class="form-check-input" type="checkbox" id="toggleMaxForm">
+                    <label class="form-check-label fw-semibold text-secondary" for="toggleMaxForm">
+                      Hide/show
+                    </label>
+                  </div>
+                   <div id="update-marks-max-section">
+                      <div class="d-flex flex-wrap gap-3 mb-4">
+                        <div>
+                          <label class="form-label text-secondary">CA1:</label>
+                          <input class="form-control" type="number" name="ca1_out_of" value="{{ grades.ca1_out_of }}" required style="width: 6rem;">
+                        </div>
+                        <div>
+                          <label class="form-label text-secondary">CA2:</label>
+                          <input class="form-control" type="number" name="ca2_out_of" value="{{ grades.ca2_out_of }}" required style="width: 6rem;">
+                        </div>
+                        <div>
+                          <label class="form-label text-secondary">ET:</label>
+                          <input class="form-control" type="number" name="et_out_of" value="{{ grades.et_out_of}}" required style="width: 6rem;">
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mb-2"><i class="bi bi-floppy me-2"></i>Save Grade</button>
+
+                </form>
+              </div>
+             <div class="d-flex gap-2 align-items-center">
+
+              {% if previous_student %}
+                <a href="{% url 'manage_student_grades' previous_student.id %}?subject_id={{ selected_subject.id }}"
+                   class="btn btn-outline-primary rounded-circle shadow-sm"
+                   data-bs-toggle="tooltip" title="Previous Student">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              {% else %}
+                <button class="btn btn-outline-secondary rounded-circle" disabled data-bs-toggle="tooltip" title="No Previous Student">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+              {% endif %}
+
+              {% if next_student %}
+                <a href="{% url 'manage_student_grades' next_student.id %}?subject_id={{ selected_subject.id }}"
+                   class="btn btn-outline-primary rounded-circle shadow-sm"
+                   data-bs-toggle="tooltip" title="Next Student">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              {% else %}
+                <button class="btn btn-outline-secondary rounded-circle" disabled data-bs-toggle="tooltip" title="No Next Student">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              {% endif %}
+
+            </div>
+
+            </div>    
+          </div> <!-- End row -->
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div>
+  
+    <h2 class="text-center mb-4">Student Performance Overview</h2>
+    
+    <div class="card shadow-sm">
+        <div class="card-body d-flex justify-content-center">
+            <canvas id="performanceChart" width="400" height="150"></canvas>
+        </div>
+    </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  document.getElementById('mySelect').addEventListener('change', function () {
+    if (this.value) {
+      document.getElementById('myForm').submit();
+    }
+  });
+
+  // Toggle update section visibility
+  document.getElementById('toggleEditForm').addEventListener('change', function () {
+    const section = document.getElementById('update-section');
+    section.style.display = this.checked ? 'block' : 'none';
+  });  
+  // Toggle update section visibility
+  document.getElementById('toggleMaxForm').addEventListener('change', function () {
+    const section = document.getElementById('update-marks-max-section');
+    section.style.display = this.checked ? 'block' : 'none';
+  });
+
+  // Student performance linear graph
+  const ctx = document.getElementById('performanceChart').getContext('2d');
+
+  let select = document.getElementById('mySelect');
+  let selected_subject = select.options[select.selectedIndex].text;
+  let ca1 = Number(document.getElementById('ca1').textContent);
+  let ca2 = Number(document.getElementById('ca2').textContent);
+  let et = Number(document.getElementById('et').textContent);
+
+  let dataList = [ca1, ca2, et];
+
+
+  const performanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Cont. Assesment 1', 'Cont. Assesment 2', 'End Term'],
+            datasets: [
+                {
+                    label: selected_subject,
+                    data: dataList,
+                    fill: false,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.4
+                },
+                
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Performance in ' + selected_subject,
+                    font: {
+                        size: 20
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Score (%)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Assessment Type'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock content %}

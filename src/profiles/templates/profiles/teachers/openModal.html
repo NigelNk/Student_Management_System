@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Student Details
+{% endblock title %}
+
+{% block content %}
+
+{% include 'profiles/teachers/student_records.html' %}
+<div aria-hidden="true" aria-labelledby="studentDetailsModalLabel" class="modal fade" id="studentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="studentDetailsModalLabel">
+                    Student Details
+                </h5>
+                <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="modal" type="button">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-4 text-center">
+                        {% if student.profile_picture %}
+                        <img alt="Admin" class="rounded-circle p-1 bg-primary" src="{{ student.profile_picture.url }}" width="150">
+                            {% else %}
+                            <img alt="Admin" class="rounded-circle p-1 bg-primary" src="https://bootdey.com/img/Content/avatar/avatar6.png" width="150">
+                                {% endif %}
+                            </img>
+                        </img>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        Name:
+                                    </th>
+                                    <td id="studentName">
+                                        {{student.full_name}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        ID:
+                                    </th>
+                                    <td id="studentID">
+                                        {{student.student_id}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Email:
+                                    </th>
+                                    <td id="studentEmail">
+                                        {{student.user.email}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Phone:
+                                    </th>
+                                    <td id="studentPhone">
+                                        +1 (555) 123-4567
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Form:
+                                    </th>
+                                    <td id="studentYear">
+                                        {{student.form}}{{student.stream}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'student_records' %}" class="btn btn-secondary">
+                    Close
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var myModal = new bootstrap.Modal(document.getElementById('studentModal'));
+    myModal.show();
+  });
+</script>
+{% endblock %}
